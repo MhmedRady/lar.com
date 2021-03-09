@@ -1,0 +1,42 @@
+
+        Schema::create('main_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string("translation_lang",10)->nullable(false);
+            $table->char("translation_of",10);
+            $table->string("name",150)->nullable(false)->collation("utf8_general_ci");
+            $table->string("slug",150)->nullable(true);
+            $table->string("photo",100)->nullable(true);
+            $table->tinyInteger("active")->default(0);
+            $table->engine = 'InnoDB';
+            $table->timestamps();
+        });
+
+
+                use HasFactory,Notifiable;
+                protected $table = "main_categories";
+                protected $fillable = ["translation_lang",'translation_of','name','slug','photo','active','created_at',"updated_at"];
+
+                public function scopeActive($query){ # ONLY GET ALL LANGUAGES IS ACTIVE
+                    return $query->where("active",1);
+                }
+
+                public function scopeMainSelect($query){
+                    return $query->select("id","translation_lang","translation_of","photo","name","slug","active");
+                }
+
+                public function getActive(){
+                    return  1 ? '<span class="badge font-weight-bold badge-primary">مفعل</span>'
+                        : '<span class="badge font-weight-bold badge-danger">غير مفعل</span>';
+                }
+
+
+            "name" =>"required|max:150|unique:main_categories,name". ($this->id ? ",$this->id" : ''),
+            "translation_lang"=>"required|max:10",
+            "photo"=>"required|mimes:jpg,jpeg,png|file|max:20480",
+//            "active"=>"required"
+
+
+         "required"=>"هذا المحتوي لايمكن ان يترك فارغ",
+          "mimes"=>"امتداد الملف المدخل غير صحيح",
+          "unique"=>"هذا القسم موجود مسبقاً",
+          "photo.max"=>"مساحة الصوره يجب الا تزيد عن 20MB"
